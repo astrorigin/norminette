@@ -117,6 +117,8 @@ def main():
                     break
             if not found:
                 tmplist.append(target)
+            elif debug:
+                print(f"{target}: Ignored")
         if len(tmplist):
             targets = tmplist
         else:
