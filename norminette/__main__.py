@@ -92,6 +92,35 @@ def main():
                     targets.extend(glob.glob(arg + "**/*.[ch]", recursive=True))
                 elif os.path.isfile(arg):
                     targets.append(arg)
+    ignorelist = []
+    if os.path.exists('.normignore'):
+        try:
+            with open('.normignore') as f:
+                while True:
+                    line = f.readline()
+                    if line:
+                        if line.strip() != '':
+                            ignorelist.append(line.strip())
+                    else:
+                        break
+        except Exception as e:
+            print("Error: .normignore file could not be read: ", e)
+            sys.exit(0)
+    if len(ignorelist):
+        import re
+        tmplist = []
+        for target in targets:
+            found = False
+            for pattern in ignorelist:
+                if re.search(pattern, target):
+                    found = True
+                    break
+            if not found:
+                tmplist.append(target)
+        if len(tmplist):
+            targets = tmplist
+        else:
+            sys.exit(0)
     event = []
     for target in targets:
         if target[-2:] not in [".c", ".h"]:
