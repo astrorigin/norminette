@@ -107,12 +107,12 @@ def main():
             print("Error: .normignore file could not be read: ", e)
             sys.exit(0)
     if len(ignorelist):
-        import re
+        from fnmatch import fnmatchcase
         tmplist = []
         for target in targets:
             found = False
             for pattern in ignorelist:
-                if re.search(pattern, target):
+                if fnmatchcase(target, pattern):
                     found = True
                     break
             if not found:
